@@ -12,6 +12,9 @@ const margin = {
 const chartWidth = width - margin.left - margin.right;
 const chartHeight = height - margin.top - margin.bottom;
 
+const colors = ["#fc0072", "#71e95e", "#ffd05b", "#4d69fe", "#ef7434"];
+const lineColor = "#3a91bf";
+
 const categories = d3.keys(data);
 
 const groups = d3
@@ -25,17 +28,10 @@ const groupData = categories.map((key) => {
   };
 });
 
-console.log(categories, groups, groupData);
+const barColors = d3.scaleOrdinal().domain(groups).range(colors);
+const stackedData = d3.stack().keys(groups)(groupData);
 
-const tooltip = d3
-  .select("body")
-  .append("div")
-  .attr("class", "tooltip")
-  .style("opacity", 0);
-
-const chartDiv = d3
-  .select("#stacked-bar-chart")
-  .attr("style", "background-color: #ffffff;");
+const chartDiv = d3.select("#stacked-bar-chart");
 
 const svg = chartDiv
   .append("svg")
@@ -49,27 +45,33 @@ const legends = svg
   .data(groups)
   .enter()
   .append("g")
-  .attr("transform", "translate(-60,-70)");
+  .classed("legend", true)
+  .attr("transform", "translate(-60,-60)");
 
 legends
   .append("rect")
   .attr("x", (d, i) => {
-    return width / 4 + i * 120;
+    return width / 4 + i * 110;
   })
   .attr("y", 0)
   .attr("width", 18)
   .attr("height", 18)
-  .attr("stroke", "black")
-  .attr("fill", "#69a3b2");
+  .attr("fill", (d, i) => colors[i]);
 
 legends
   .append("text")
   .attr("x", (d, i) => {
-    return 30 + width / 4 + i * 120;
+    return 30 + width / 4 + i * 110;
   })
   .attr("y", 12)
   .attr("dy", ".18em")
   .text((d) => d);
+
+const tooltip = d3
+  .select("body")
+  .append("div")
+  .attr("id", "tooltip")
+  .style("opacity", 0);
 
 const xBarChart = d3
   .scaleBand()
@@ -89,9 +91,10 @@ const yBarChart = d3
     d3.max(groupData, (d) => {
       const tmpObj = { ...d };
       delete tmpObj.quarter;
-      // delete tmpObj["Revenue Growth"];
+      delete tmpObj["Revenue Growth"];
       return d3.sum(d3.values(tmpObj));
-    }),
+    }) *
+      (8 / 7),
   ])
   .range([chartHeight, 0]);
 
@@ -104,15 +107,6 @@ svg
       .tickPadding(15)
       .tickFormat(d3.format("$.2s"))
   );
-
-const barColors = d3
-  .scaleOrdinal()
-  .domain(groups)
-  .range(["#fc0072", "#71e95e", "#ffd05b", "#4d69fe", "#ef7434"]);
-
-const lineColor = "#3a91bf";
-
-const stackedData = d3.stack().keys(groups)(groupData);
 
 svg
   .append("g")
@@ -166,9 +160,7 @@ svg
   .data(groupData)
   .enter()
   .append("circle")
-  .attr("fill", "#ffffff")
-  .attr("stroke", "none")
-  .style("z-index", 9999)
+  .classed("dot", true)
   .attr("cx", function (d) {
     return xBarChart(d.quarter) + xBarChart.bandwidth() / 2;
   })
@@ -180,18 +172,29 @@ svg
   .on("mouseout", () => onMouseOut());
 
 function onBarMouseOver(e, d) {
-  tooltip.transition().duration(200).style("opacity", 0.9);
+  d3.select(this).transition().duration(100).style("opacity", 0.5);
+
   const f = d3.format("$.2s");
-  tooltip.html(`${d["data"]["quarter"]}<br>${f(d[1] - d[0])}`);
+  tooltip.transition().duration(200).style("opacity", 1);
+  tooltip
+    .html(`${f(d[1] - d[0])}`)
+    .style("left", `${e.layerX}px`)
+    .style("top", `${e.layerY + 10}px`);
 }
 
 function onMouseOut() {
-  tooltip.transition().duration(300).style("opacity", 0);
+  d3.select(this).transition().duration(100).style("opacity", 1);
+
+  tooltip.transition().duration(100).style("opacity", 0);
 }
 
 function onDotMouseOver(e, d) {
-  console.log(d);
-  tooltip.transition().duration(200).style("opacity", 0.9);
+  d3.select(this).transition().duration(100).style("opacity", 0.5);
+
   const f = d3.format("$.2s");
-  tooltip.html(`${d["quarter"]}<br>${f(d["Revenue Growth"])}`);
+  tooltip.transition().duration(200).style("opacity", 1);
+  tooltip
+    .html(`${f(d["Revenue Growth"])}`)
+    .style("left", `${e.layerX}px`)
+    .style("top", `${e.layerY + 10}px`);
 }
