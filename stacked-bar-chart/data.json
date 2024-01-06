@@ -1,0 +1,37 @@
+{
+  "2022 Q4": {
+    "Group A": 36720000,
+    "Group B": 14280000,
+    "Group C": 8160000,
+    "Group D": 7760000,
+    "Revenue Growth": 27000000
+  },
+  "2023 Q1": {
+    "Group A": 46720000,
+    "Group B": 24280000,
+    "Group C": 10160000,
+    "Group D": 24760000,
+    "Revenue Growth": 40000000
+  },
+  "2023 Q2": {
+    "Group A": 56720000,
+    "Group B": 44280000,
+    "Group C": 6160000,
+    "Group D": 7960000,
+    "Revenue Growth": 48000000
+  },
+  "2023 Q3": {
+    "Group A": 3720000,
+    "Group B": 7280000,
+    "Group C": 12160000,
+    "Group D": 9760000,
+    "Revenue Growth": 9000000
+  },
+  "2023 Q4": {
+    "Group A": 6720000,
+    "Group B": 14280000,
+    "Group C": 18160000,
+    "Group D": 15760000,
+    "Revenue Growth": 32000000
+  }
+}
