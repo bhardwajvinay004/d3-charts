@@ -93,8 +93,7 @@ const yBarChart = d3
       delete tmpObj.quarter;
       delete tmpObj["Revenue Growth"];
       return d3.sum(d3.values(tmpObj));
-    }) *
-      (8 / 7),
+    }),
   ])
   .range([chartHeight, 0]);
 
@@ -133,8 +132,8 @@ svg
     return yBarChart(d[0]) - yBarChart(d[1]);
   })
   .attr("width", xBarChart.bandwidth())
-  .on("mouseover", (e, d) => onBarMouseOver(e, d))
-  .on("mouseout", () => onMouseOut());
+  .on("mousemove", (e, d) => onBarMouseMove(e, d))
+  .on("mouseout", (e) => onMouseOut(e));
 
 svg
   .append("path")
@@ -167,12 +166,11 @@ svg
   .attr("cy", function (d) {
     return yBarChart(d["Revenue Growth"]);
   })
-  .attr("r", 4)
-  .on("mouseover", (e, d) => onDotMouseOver(e, d))
-  .on("mouseout", () => onMouseOut());
+  .on("mousemove", (e, d) => onDotMouseMove(e, d))
+  .on("mouseout", (e) => onMouseOut(e));
 
-function onBarMouseOver(e, d) {
-  d3.select(this).transition().duration(100).style("opacity", 0.5);
+function onBarMouseMove(e, d) {
+  d3.select(e.target).transition().duration(200).style("opacity", 0.4);
 
   const f = d3.format("$.2s");
   tooltip.transition().duration(200).style("opacity", 1);
@@ -182,15 +180,13 @@ function onBarMouseOver(e, d) {
     .style("top", `${e.layerY + 10}px`);
 }
 
-function onMouseOut() {
-  d3.select(this).transition().duration(100).style("opacity", 1);
+function onMouseOut(e) {
+  d3.select(e.target).transition().duration(200).style("opacity", 1);
 
-  tooltip.transition().duration(100).style("opacity", 0);
+  tooltip.transition().duration(200).style("opacity", 0);
 }
 
-function onDotMouseOver(e, d) {
-  d3.select(this).transition().duration(100).style("opacity", 0.5);
-
+function onDotMouseMove(e, d) {
   const f = d3.format("$.2s");
   tooltip.transition().duration(200).style("opacity", 1);
   tooltip

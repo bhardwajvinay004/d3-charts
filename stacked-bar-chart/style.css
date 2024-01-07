@@ -48,8 +48,16 @@ path.domain {
 
 .dot {
   fill: #ffffff;
-  stroke: none;
+  stroke: #525252;
+  filter: drop-shadow(0 0 2px #525252);
+  r: 4;
   z-index: 99;
+  transition: r 0.4s;
+}
+
+.dot:hover {
+  filter: drop-shadow(0 0 4px #525252);
+  r: 5;
 }
 
 #tooltip {
