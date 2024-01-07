@@ -46,25 +46,32 @@ path.domain {
   color: #f1f3f5;
 }
 
+.line {
+  fill: none;
+  stroke: #3a91bf;
+  stroke-width: 2;
+  z-index: 99;
+}
+
 .dot {
   fill: #ffffff;
   stroke: #525252;
-  filter: drop-shadow(0 0 2px #525252);
+  filter: drop-shadow(0 0 3px #525252);
   r: 4;
   z-index: 99;
-  transition: r 0.4s;
+  transition: r 0.3s;
 }
 
 .dot:hover {
-  filter: drop-shadow(0 0 4px #525252);
-  r: 5;
+  filter: drop-shadow(0 0 5px #525252);
+  r: 6;
 }
 
 #tooltip {
   position: absolute;
   background-color: #ffffff;
   color: #525252;
-  border: 2px solid #eff0f5;
+  border: 1px solid #eff0f5;
   border-radius: 2px;
   padding: 6px 5px;
   margin: 0;
